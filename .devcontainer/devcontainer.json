@@ -1,7 +1,7 @@
 {
   "name": "ROS2 Line Follower",
   "image": "ros:humble-ros-base",
-  "postCreateCommand": "apt-get update && apt-get install -y python3-pip && pip3 install torch torchvision opencv-python-headless numpy matplotlib jupyterlab && echo 'source /opt/ros/humble/setup.bash' >> /root/.bashrc",
+  "postCreateCommand": "apt-get update && apt-get install -y python3-pip python3-colcon-common-extensions ros-humble-cv-bridge nano && pip3 install torch torchvision opencv-python-headless numpy matplotlib jupyterlab && echo 'source /opt/ros/humble/setup.bash' >> /root/.bashrc && echo 'source /workspaces/ros2-line-follower/install/setup.bash' >> /root/.bashrc",
   "forwardPorts": [8888, 9090],
   "portsAttributes": {
     "8888": { "label": "Jupyter Lab" },
