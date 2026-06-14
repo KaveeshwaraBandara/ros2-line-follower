@@ -1,0 +1,38 @@
+name: ROS2 CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    container:
+      image: ros:humble-ros-base
+
+
+steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          apt-get update && apt-get install -y \
+            python3-pip python3-colcon-common-extensions \
+            ros-humble-cv-bridge ros-humble-gazebo-ros-pkgs \
+            ros-humble-robot-state-publisher ros-humble-xacro
+          pip3 install 'numpy<2' torch torchvision opencv-python-headless
+
+      - name: Build package
+        run: |
+          . /opt/ros/humble/setup.sh
+          colcon build
+
+      - name: Verify package and nodes
+        run: |
+          . /opt/ros/humble/setup.sh
+          . install/setup.sh
+          ros2 pkg list | grep line_follower
+          ros2 pkg executables line_follower
