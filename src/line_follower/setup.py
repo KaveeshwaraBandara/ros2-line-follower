@@ -14,6 +14,8 @@ setup(
         ['urdf/robot.urdf.xacro']),
         ('share/' + package_name + '/launch',
         ['launch/simulation.launch.py']),
+        ('share/' + package_name + '/worlds',
+        ['worlds/line_track.world']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,

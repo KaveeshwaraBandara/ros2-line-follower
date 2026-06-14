@@ -33,11 +33,25 @@ def generate_frame(line_x, rng):
     image = np.clip(image.astype(np.int16) + texture, 0, 255).astype(np.uint8)
 
     line_width = rng.integers(30, 55)
-    line_darkness = rng.integers(0, 60)
+    line_darkness = int(rng.integers(0, 60))
 
-    x_start = max(0, int(line_x - line_width / 2))
-    x_end = min(IMAGE_WIDTH, int(line_x + line_width / 2))
-    image[:, x_start:x_end] = line_darkness
+    angle_deg = rng.uniform(-35, 35)
+    angle_rad = np.deg2rad(angle_deg)
+
+    x_bottom = int(line_x)
+    y_bottom = IMAGE_HEIGHT - 1
+
+    dx = int(np.tan(angle_rad) * IMAGE_HEIGHT)
+    x_top = x_bottom - dx
+    y_top = 0
+
+    cv2.line(
+        image,
+        (x_bottom, y_bottom),
+        (x_top, y_top),
+        (line_darkness, line_darkness, line_darkness),
+        thickness=int(line_width)
+    )
 
     image = add_realism(image, rng)
     return image

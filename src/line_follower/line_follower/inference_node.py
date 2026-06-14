@@ -26,6 +26,7 @@ class InferenceNode(Node):
         self.model.eval()
 
         self.class_names = ['center', 'left', 'right']
+        self.uncertain_count = 0
 
         self.subscription = self.create_subscription(
             Image, '/camera/image_raw', self.image_callback, 10)
@@ -44,23 +45,38 @@ class InferenceNode(Node):
 
         with torch.no_grad():
             output = self.model(tensor)
-            predicted_idx = torch.argmax(output, dim=1).item()
+            probs = torch.softmax(output, dim=1)
+            confidence, predicted_idx = torch.max(probs, dim=1)
+            confidence = confidence.item()
+            predicted_idx = predicted_idx.item()
 
         prediction = self.class_names[predicted_idx]
 
         twist = Twist()
-        if prediction == 'center':
-            twist.linear.x = 0.2
-            twist.angular.z = 0.0
-        elif prediction == 'left':
-            twist.linear.x = 0.1
-            twist.angular.z = 0.5
-        elif prediction == 'right':
-            twist.linear.x = 0.1
-            twist.angular.z = -0.5
+        if confidence < 0.8:
+            self.uncertain_count += 1
+            if self.uncertain_count < 10:
+                prediction = 'uncertain-wait'
+                # all zeros: pause briefly, line may reappear
+            else:
+                prediction = 'uncertain-search'
+                twist.linear.x = 0.0
+                twist.angular.z = 0.3
+        else:
+            self.uncertain_count = 0
+            if prediction == 'center':
+                twist.linear.x = 0.2
+                twist.angular.z = 0.0
+            elif prediction == 'left':
+                twist.linear.x = 0.1
+                twist.angular.z = 0.5
+            elif prediction == 'right':
+                twist.linear.x = 0.1
+                twist.angular.z = -0.5
 
         self.publisher.publish(twist)
-        self.get_logger().info(f'Prediction: {prediction} → cmd_vel published')
+        self.get_logger().info(
+            f'Prediction: {prediction} (conf {confidence:.2f}) → cmd_vel')
 
 
 def main(args=None):
