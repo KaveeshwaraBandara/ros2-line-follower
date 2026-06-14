@@ -11,9 +11,7 @@ jobs:
     runs-on: ubuntu-22.04
     container:
       image: ros:humble-ros-base
-
-
-steps:
+    steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
