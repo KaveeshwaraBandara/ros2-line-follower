@@ -21,6 +21,7 @@ jobs:
             python3-pip python3-colcon-common-extensions \
             ros-humble-cv-bridge ros-humble-gazebo-ros-pkgs \
             ros-humble-robot-state-publisher ros-humble-xacro
+          pip3 install --upgrade pytest
           pip3 install 'numpy<2' torch torchvision opencv-python-headless
 
       - name: Build package
@@ -34,3 +35,8 @@ jobs:
           . install/setup.sh
           ros2 pkg list | grep line_follower
           ros2 pkg executables line_follower
+
+      - name: Run smoke tests
+        run: |
+          PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3 -m pytest \
+            src/line_follower/test/test_model_smoke.py -v
