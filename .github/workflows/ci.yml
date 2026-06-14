@@ -21,8 +21,7 @@ jobs:
             python3-pip python3-colcon-common-extensions \
             ros-humble-cv-bridge ros-humble-gazebo-ros-pkgs \
             ros-humble-robot-state-publisher ros-humble-xacro
-          pip3 install --upgrade pytest
-          pip3 install 'numpy<2' torch torchvision opencv-python-headless
+          pip3 install -r requirements.txt
 
       - name: Build package
         run: |
