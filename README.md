@@ -1,4 +1,5 @@
 # 🤖 ROS2 Line-Following Robot — Vision-Based, Trained in the Cloud
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/KaveeshwaraBandara/ros2-line-follower)
 
 A complete, reproducible robotics + AI project: a differential-drive robot that follows a line using a convolutional neural network for vision — built, trained, and simulated **entirely inside a GitHub Codespace**, with no GPU and no local install required.
 
