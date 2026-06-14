@@ -33,6 +33,7 @@ setup(
             'camera_node = line_follower.camera_node:main',
             'inference_node = line_follower.inference_node:main',
             'trajectory_recorder = line_follower.trajectory_recorder:main',
+            'overlay_recorder = line_follower.overlay_recorder:main',
         ],
     },
 )
