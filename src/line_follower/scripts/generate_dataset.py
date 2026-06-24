@@ -2,10 +2,13 @@ import os
 import numpy as np
 import cv2
 
+_SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
+_PROJECT_ROOT = os.path.abspath(os.path.join(_SCRIPTS_DIR, '..', '..', '..'))
+
 IMAGE_WIDTH = 640
 IMAGE_HEIGHT = 480
 SAMPLES_PER_CLASS = 1000
-OUTPUT_DIR = '/workspaces/ros2-line-follower/dataset'
+OUTPUT_DIR = os.path.join(_PROJECT_ROOT, 'dataset')
 
 LEFT_THRESHOLD = IMAGE_WIDTH * 0.4
 RIGHT_THRESHOLD = IMAGE_WIDTH * 0.6

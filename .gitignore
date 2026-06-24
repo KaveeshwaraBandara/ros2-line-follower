@@ -7,3 +7,5 @@ __pycache__/
 dataset/
 *.pth
 *.mp4
+GUIDE.md
+run_guide.md

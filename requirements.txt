@@ -7,8 +7,10 @@
 numpy==1.26.4
 
 # Deep learning. torchvision version must be compatible with torch.
-torch==2.12.0
-torchvision==0.27.0
+--extra-index-url https://download.pytorch.org/whl/cu121
+
+torch==2.12.0+cu121
+torchvision==0.27.0+cu121
 
 # Vision. The -headless build avoids GUI dependencies (no display in Codespace).
 opencv-python-headless==4.10.0.84

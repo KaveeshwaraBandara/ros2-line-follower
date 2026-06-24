@@ -1,0 +1,29 @@
+services:
+  ros2-line-follower:
+    build: .
+    image: ros2-line-follower:latest
+
+    volumes:
+      # Mount at exactly this path — matches ROS2_LF_WORKSPACE and all node fallback paths
+      - .:/workspaces/ros2-line-follower
+
+    environment:
+      - DISPLAY=:99
+      - LIBGL_ALWAYS_SOFTWARE=1
+      - ROS_DOMAIN_ID=42
+      - ROS2_LF_WORKSPACE=/workspaces/ros2-line-follower
+
+    # GPU passthrough — requires NVIDIA Container Toolkit on the host
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+    # Host networking keeps ROS2 DDS discovery working across terminals
+    network_mode: host
+
+    stdin_open: true
+    tty: true
