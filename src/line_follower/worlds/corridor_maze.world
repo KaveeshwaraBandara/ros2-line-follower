@@ -1,0 +1,363 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <world name="corridor_maze">
+
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <!--
+      ═══════════════════════════════════════════════════════════
+      CORRIDOR MAZE  —  20 m × 10 m enclosure (-10→10, -5→5)
+      Robot spawns at (0,0) facing +X on Row 1.
+
+      Line path (3-row snake, top view):
+
+        (-9,4)════════════════Row 3════════════════(9,4)
+        ║ (left turn at x=-9)
+        (-9,2)════════════════Row 2════════════════(9,2)
+                                        (right turn at x=9) ║
+        (-9,0)════════════════Row 1════════════════(9,0)
+                     *(robot starts here)
+
+      Corridor walls:
+        H1 at y=1  — gap at east end (x=8→10) for the right turn
+        H2 at y=3  — gap at west end (x=-10→-8) for the left turn
+
+      Outer walls at x=±10, y=±5 physically bound the arena.
+      ═══════════════════════════════════════════════════════════
+    -->
+
+    <!-- ───────────────────────────────────────────────────────
+         DARK LINE PATH  (z=0.001, width=0.05 m)
+         Corner segments are 0.1 m longer so ends overlap,
+         closing the gap at each turn.
+    ─────────────────────────────────────────────────────────── -->
+
+    <!-- Row 1: east along y=0 from x=-9 to x=9 -->
+    <model name="line_row1">
+      <static>true</static>
+      <pose>0 0 0.001 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>18.0 0.05 0.001</size></box></geometry>
+          <material>
+            <ambient>0.05 0.05 0.05 1</ambient>
+            <diffuse>0.05 0.05 0.05 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Right turn: x=9, from y=0 to y=2 -->
+    <model name="line_turn_right">
+      <static>true</static>
+      <pose>9 1.0 0.001 0 0 1.5708</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>2.1 0.05 0.001</size></box></geometry>
+          <material>
+            <ambient>0.05 0.05 0.05 1</ambient>
+            <diffuse>0.05 0.05 0.05 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Row 2: west along y=2 from x=9 to x=-9 -->
+    <model name="line_row2">
+      <static>true</static>
+      <pose>0 2 0.001 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>18.0 0.05 0.001</size></box></geometry>
+          <material>
+            <ambient>0.05 0.05 0.05 1</ambient>
+            <diffuse>0.05 0.05 0.05 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Left turn: x=-9, from y=2 to y=4 -->
+    <model name="line_turn_left">
+      <static>true</static>
+      <pose>-9 3.0 0.001 0 0 1.5708</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>2.1 0.05 0.001</size></box></geometry>
+          <material>
+            <ambient>0.05 0.05 0.05 1</ambient>
+            <diffuse>0.05 0.05 0.05 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Row 3: east along y=4 from x=-9 to x=9 -->
+    <model name="line_row3">
+      <static>true</static>
+      <pose>0 4 0.001 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>18.0 0.05 0.001</size></box></geometry>
+          <material>
+            <ambient>0.05 0.05 0.05 1</ambient>
+            <diffuse>0.05 0.05 0.05 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ───────────────────────────────────────────────────────
+         OUTER BOUNDARY WALLS  (dark gray, h=0.5 m)
+         Each wall has collision so the robot bounces off.
+    ─────────────────────────────────────────────────────────── -->
+
+    <model name="wall_south">
+      <static>true</static>
+      <pose>0 -5 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="col"><geometry><box><size>20.4 0.2 0.5</size></box></geometry></collision>
+        <visual name="vis">
+          <geometry><box><size>20.4 0.2 0.5</size></box></geometry>
+          <material><ambient>0.25 0.25 0.25 1</ambient><diffuse>0.25 0.25 0.25 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="wall_north">
+      <static>true</static>
+      <pose>0 5 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="col"><geometry><box><size>20.4 0.2 0.5</size></box></geometry></collision>
+        <visual name="vis">
+          <geometry><box><size>20.4 0.2 0.5</size></box></geometry>
+          <material><ambient>0.25 0.25 0.25 1</ambient><diffuse>0.25 0.25 0.25 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="wall_west">
+      <static>true</static>
+      <pose>-10 0 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="col"><geometry><box><size>0.2 10 0.5</size></box></geometry></collision>
+        <visual name="vis">
+          <geometry><box><size>0.2 10 0.5</size></box></geometry>
+          <material><ambient>0.25 0.25 0.25 1</ambient><diffuse>0.25 0.25 0.25 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="wall_east">
+      <static>true</static>
+      <pose>10 0 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="col"><geometry><box><size>0.2 10 0.5</size></box></geometry></collision>
+        <visual name="vis">
+          <geometry><box><size>0.2 10 0.5</size></box></geometry>
+          <material><ambient>0.25 0.25 0.25 1</ambient><diffuse>0.25 0.25 0.25 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ───────────────────────────────────────────────────────
+         CORRIDOR DIVIDER WALLS  (steel blue)
+         H1 at y=1: runs x=-9 → x=8  (gap x=8→10 for right turn)
+         H2 at y=3: runs x=-8 → x=9  (gap x=-10→-8 for left turn)
+    ─────────────────────────────────────────────────────────── -->
+
+    <!-- H1: length 17, centre at (-0.5, 1) -->
+    <model name="wall_corridor_h1">
+      <static>true</static>
+      <pose>-0.5 1 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="col"><geometry><box><size>17.0 0.2 0.5</size></box></geometry></collision>
+        <visual name="vis">
+          <geometry><box><size>17.0 0.2 0.5</size></box></geometry>
+          <material><ambient>0.25 0.38 0.58 1</ambient><diffuse>0.25 0.38 0.58 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- H2: length 17, centre at (0.5, 3) -->
+    <model name="wall_corridor_h2">
+      <static>true</static>
+      <pose>0.5 3 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="col"><geometry><box><size>17.0 0.2 0.5</size></box></geometry></collision>
+        <visual name="vis">
+          <geometry><box><size>17.0 0.2 0.5</size></box></geometry>
+          <material><ambient>0.25 0.38 0.58 1</ambient><diffuse>0.25 0.38 0.58 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ───────────────────────────────────────────────────────
+         WALL STUBS — partial dividers for extra complexity
+         All placed away from the line so they don't block it.
+    ─────────────────────────────────────────────────────────── -->
+
+    <!-- Two stubs from the south outer wall into the Row 1 open space -->
+    <!-- stub_s1: at x=-6, from y=-5 to y=-1 -->
+    <model name="stub_s1">
+      <static>true</static>
+      <pose>-6 -3 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="col"><geometry><box><size>0.2 4.0 0.5</size></box></geometry></collision>
+        <visual name="vis">
+          <geometry><box><size>0.2 4.0 0.5</size></box></geometry>
+          <material><ambient>0.25 0.38 0.58 1</ambient><diffuse>0.25 0.38 0.58 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- stub_s2: at x=3, from y=-5 to y=-1 -->
+    <model name="stub_s2">
+      <static>true</static>
+      <pose>3 -3 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="col"><geometry><box><size>0.2 4.0 0.5</size></box></geometry></collision>
+        <visual name="vis">
+          <geometry><box><size>0.2 4.0 0.5</size></box></geometry>
+          <material><ambient>0.25 0.38 0.58 1</ambient><diffuse>0.25 0.38 0.58 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- stub_n1: short stub from north outer wall into Row 3 corridor -->
+    <!-- at x=-3, from y=4.3 to y=5 -->
+    <model name="stub_n1">
+      <static>true</static>
+      <pose>-3 4.65 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="col"><geometry><box><size>0.2 0.7 0.5</size></box></geometry></collision>
+        <visual name="vis">
+          <geometry><box><size>0.2 0.7 0.5</size></box></geometry>
+          <material><ambient>0.25 0.38 0.58 1</ambient><diffuse>0.25 0.38 0.58 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- stub_n2: short stub from north outer wall, other side -->
+    <!-- at x=5, from y=4.3 to y=5 -->
+    <model name="stub_n2">
+      <static>true</static>
+      <pose>5 4.65 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="col"><geometry><box><size>0.2 0.7 0.5</size></box></geometry></collision>
+        <visual name="vis">
+          <geometry><box><size>0.2 0.7 0.5</size></box></geometry>
+          <material><ambient>0.25 0.38 0.58 1</ambient><diffuse>0.25 0.38 0.58 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ───────────────────────────────────────────────────────
+         BOX OBSTACLES  (burnt orange)
+         All positioned off the line path with clearance.
+    ─────────────────────────────────────────────────────────── -->
+
+    <!-- Two boxes in the south open space (below Row 1 line at y=0) -->
+    <model name="box_a">
+      <static>true</static>
+      <pose>-4 -2.5 0.25 0 0 0.5</pose>
+      <link name="link">
+        <collision name="col"><geometry><box><size>0.8 0.8 0.5</size></box></geometry></collision>
+        <visual name="vis">
+          <geometry><box><size>0.8 0.8 0.5</size></box></geometry>
+          <material><ambient>0.72 0.33 0.08 1</ambient><diffuse>0.72 0.33 0.08 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="box_b">
+      <static>true</static>
+      <pose>5 -2.0 0.25 0 0 0.3</pose>
+      <link name="link">
+        <collision name="col"><geometry><box><size>1.0 0.6 0.5</size></box></geometry></collision>
+        <visual name="vis">
+          <geometry><box><size>1.0 0.6 0.5</size></box></geometry>
+          <material><ambient>0.72 0.33 0.08 1</ambient><diffuse>0.72 0.33 0.08 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Two boxes in Row 2 corridor (y=1 to y=3, line at y=2)
+         box_c: south side of corridor, 0.5 m from H1 wall
+         box_d: north side of corridor, 0.5 m from H2 wall -->
+    <model name="box_c">
+      <static>true</static>
+      <pose>-4 1.5 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="col"><geometry><box><size>0.6 0.5 0.5</size></box></geometry></collision>
+        <visual name="vis">
+          <geometry><box><size>0.6 0.5 0.5</size></box></geometry>
+          <material><ambient>0.72 0.33 0.08 1</ambient><diffuse>0.72 0.33 0.08 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="box_d">
+      <static>true</static>
+      <pose>3 2.5 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="col"><geometry><box><size>0.6 0.5 0.5</size></box></geometry></collision>
+        <visual name="vis">
+          <geometry><box><size>0.6 0.5 0.5</size></box></geometry>
+          <material><ambient>0.72 0.33 0.08 1</ambient><diffuse>0.72 0.33 0.08 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ───────────────────────────────────────────────────────
+         CYLINDER PILLARS  (dark red)
+         Placed in open spaces well clear of the line.
+    ─────────────────────────────────────────────────────────── -->
+
+    <!-- pillar_a: in south open space near west stubs -->
+    <model name="pillar_a">
+      <static>true</static>
+      <pose>-7 -1.5 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="col"><geometry><cylinder><radius>0.3</radius><length>1.0</length></cylinder></geometry></collision>
+        <visual name="vis">
+          <geometry><cylinder><radius>0.3</radius><length>1.0</length></cylinder></geometry>
+          <material><ambient>0.55 0.08 0.08 1</ambient><diffuse>0.55 0.08 0.08 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- pillar_b: in south open space, east half -->
+    <model name="pillar_b">
+      <static>true</static>
+      <pose>7 -3.5 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="col"><geometry><cylinder><radius>0.3</radius><length>1.0</length></cylinder></geometry></collision>
+        <visual name="vis">
+          <geometry><cylinder><radius>0.3</radius><length>1.0</length></cylinder></geometry>
+          <material><ambient>0.55 0.08 0.08 1</ambient><diffuse>0.55 0.08 0.08 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- pillar_c: in Row 3 corridor, east half — y=4.7 keeps it 0.7 m from line at y=4 -->
+    <model name="pillar_c">
+      <static>true</static>
+      <pose>5 4.7 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="col"><geometry><cylinder><radius>0.3</radius><length>1.0</length></cylinder></geometry></collision>
+        <visual name="vis">
+          <geometry><cylinder><radius>0.3</radius><length>1.0</length></cylinder></geometry>
+          <material><ambient>0.55 0.08 0.08 1</ambient><diffuse>0.55 0.08 0.08 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>

@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <world name="rectangle">
+
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <!--
+      Closed rectangular loop. Robot spawns at (0,0) facing +X, on the bottom segment.
+
+      Shape (top view):
+          (-3,4) ----top---- (3,4)
+             |                 |
+            left             right
+             |                 |
+          (-3,0) ---bottom--- (3,0)
+                      * robot
+
+      The vertical segments are 0.1m longer than the rectangle height so their
+      ends slightly overlap the horizontal segments at each corner, closing the gap.
+    -->
+
+    <!-- Bottom: robot starts here -->
+    <model name="bottom">
+      <static>true</static>
+      <pose>0 0 0.001 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>6.0 0.05 0.001</size></box></geometry>
+          <material>
+            <ambient>0.05 0.05 0.05 1</ambient>
+            <diffuse>0.05 0.05 0.05 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Right side -->
+    <model name="right">
+      <static>true</static>
+      <pose>3 2 0.001 0 0 1.5708</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>4.1 0.05 0.001</size></box></geometry>
+          <material>
+            <ambient>0.05 0.05 0.05 1</ambient>
+            <diffuse>0.05 0.05 0.05 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Top -->
+    <model name="top">
+      <static>true</static>
+      <pose>0 4 0.001 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>6.0 0.05 0.001</size></box></geometry>
+          <material>
+            <ambient>0.05 0.05 0.05 1</ambient>
+            <diffuse>0.05 0.05 0.05 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Left side -->
+    <model name="left">
+      <static>true</static>
+      <pose>-3 2 0.001 0 0 1.5708</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>4.1 0.05 0.001</size></box></geometry>
+          <material>
+            <ambient>0.05 0.05 0.05 1</ambient>
+            <diffuse>0.05 0.05 0.05 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>

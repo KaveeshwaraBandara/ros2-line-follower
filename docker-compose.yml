@@ -6,12 +6,15 @@ services:
     volumes:
       # Mount at exactly this path — matches ROS2_LF_WORKSPACE and all node fallback paths
       - .:/workspaces/ros2-line-follower
+      # X11 socket — required for Gazebo GUI (gui:=true). Safe to keep even when running headless.
+      - /tmp/.X11-unix:/tmp/.X11-unix
 
     environment:
-      - DISPLAY=:99
       - LIBGL_ALWAYS_SOFTWARE=1
       - ROS_DOMAIN_ID=42
       - ROS2_LF_WORKSPACE=/workspaces/ros2-line-follower
+      # Pass host display so gzclient can open a window. Ignored when running headless (gui:=false).
+      - DISPLAY=${DISPLAY}
 
     # GPU passthrough — requires NVIDIA Container Toolkit on the host
     deploy:
