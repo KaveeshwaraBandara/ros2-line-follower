@@ -100,7 +100,7 @@ def generate_launch_description():
             'world_name',
             default_value='line_track',
             description='World file name (no .world extension) from the worlds/ directory. '
-                        'Built-in options: line_track, rectangle'
+                        'Options: line_track, rectangle, triangle, corridor_maze, curved, zigzag, messy'
         ),
         DeclareLaunchArgument(
             'gui',

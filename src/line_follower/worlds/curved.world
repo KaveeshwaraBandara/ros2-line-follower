@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <world name="curved">
+
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <!--
+      Full circular loop, radius 2.5 m, centre at (0, 2.5).
+      Robot spawns at (0, 0) facing +X — the bottom of the circle.
+      Path is approximated by 24 chord segments (15 deg each).
+      Chord length = 2 * 2.5 * sin(7.5 deg) = 0.653 m.
+
+      Traversal direction: counter-clockwise (robot turns left continuously).
+    -->
+
+    <model name="curve_00"><static>true</static><pose>0.326 0.021 0.001 0 0 0.131</pose><link name="link"><visual name="v"><geometry><box><size>0.653 0.05 0.001</size></box></geometry><material><ambient>0.05 0.05 0.05 1</ambient><diffuse>0.05 0.05 0.05 1</diffuse></material></visual></link></model>
+    <model name="curve_01"><static>true</static><pose>0.957 0.190 0.001 0 0 0.393</pose><link name="link"><visual name="v"><geometry><box><size>0.653 0.05 0.001</size></box></geometry><material><ambient>0.05 0.05 0.05 1</ambient><diffuse>0.05 0.05 0.05 1</diffuse></material></visual></link></model>
+    <model name="curve_02"><static>true</static><pose>1.522 0.517 0.001 0 0 0.654</pose><link name="link"><visual name="v"><geometry><box><size>0.653 0.05 0.001</size></box></geometry><material><ambient>0.05 0.05 0.05 1</ambient><diffuse>0.05 0.05 0.05 1</diffuse></material></visual></link></model>
+    <model name="curve_03"><static>true</static><pose>1.983 0.978 0.001 0 0 0.916</pose><link name="link"><visual name="v"><geometry><box><size>0.653 0.05 0.001</size></box></geometry><material><ambient>0.05 0.05 0.05 1</ambient><diffuse>0.05 0.05 0.05 1</diffuse></material></visual></link></model>
+    <model name="curve_04"><static>true</static><pose>2.310 1.543 0.001 0 0 1.178</pose><link name="link"><visual name="v"><geometry><box><size>0.653 0.05 0.001</size></box></geometry><material><ambient>0.05 0.05 0.05 1</ambient><diffuse>0.05 0.05 0.05 1</diffuse></material></visual></link></model>
+    <model name="curve_05"><static>true</static><pose>2.479 2.174 0.001 0 0 1.440</pose><link name="link"><visual name="v"><geometry><box><size>0.653 0.05 0.001</size></box></geometry><material><ambient>0.05 0.05 0.05 1</ambient><diffuse>0.05 0.05 0.05 1</diffuse></material></visual></link></model>
+    <model name="curve_06"><static>true</static><pose>2.479 2.826 0.001 0 0 1.702</pose><link name="link"><visual name="v"><geometry><box><size>0.653 0.05 0.001</size></box></geometry><material><ambient>0.05 0.05 0.05 1</ambient><diffuse>0.05 0.05 0.05 1</diffuse></material></visual></link></model>
+    <model name="curve_07"><static>true</static><pose>2.310 3.457 0.001 0 0 1.963</pose><link name="link"><visual name="v"><geometry><box><size>0.653 0.05 0.001</size></box></geometry><material><ambient>0.05 0.05 0.05 1</ambient><diffuse>0.05 0.05 0.05 1</diffuse></material></visual></link></model>
+    <model name="curve_08"><static>true</static><pose>1.983 4.022 0.001 0 0 2.225</pose><link name="link"><visual name="v"><geometry><box><size>0.653 0.05 0.001</size></box></geometry><material><ambient>0.05 0.05 0.05 1</ambient><diffuse>0.05 0.05 0.05 1</diffuse></material></visual></link></model>
+    <model name="curve_09"><static>true</static><pose>1.522 4.483 0.001 0 0 2.487</pose><link name="link"><visual name="v"><geometry><box><size>0.653 0.05 0.001</size></box></geometry><material><ambient>0.05 0.05 0.05 1</ambient><diffuse>0.05 0.05 0.05 1</diffuse></material></visual></link></model>
+    <model name="curve_10"><static>true</static><pose>0.957 4.810 0.001 0 0 2.749</pose><link name="link"><visual name="v"><geometry><box><size>0.653 0.05 0.001</size></box></geometry><material><ambient>0.05 0.05 0.05 1</ambient><diffuse>0.05 0.05 0.05 1</diffuse></material></visual></link></model>
+    <model name="curve_11"><static>true</static><pose>0.326 4.979 0.001 0 0 3.011</pose><link name="link"><visual name="v"><geometry><box><size>0.653 0.05 0.001</size></box></geometry><material><ambient>0.05 0.05 0.05 1</ambient><diffuse>0.05 0.05 0.05 1</diffuse></material></visual></link></model>
+    <model name="curve_12"><static>true</static><pose>-0.326 4.979 0.001 0 0 3.272</pose><link name="link"><visual name="v"><geometry><box><size>0.653 0.05 0.001</size></box></geometry><material><ambient>0.05 0.05 0.05 1</ambient><diffuse>0.05 0.05 0.05 1</diffuse></material></visual></link></model>
+    <model name="curve_13"><static>true</static><pose>-0.957 4.810 0.001 0 0 3.534</pose><link name="link"><visual name="v"><geometry><box><size>0.653 0.05 0.001</size></box></geometry><material><ambient>0.05 0.05 0.05 1</ambient><diffuse>0.05 0.05 0.05 1</diffuse></material></visual></link></model>
+    <model name="curve_14"><static>true</static><pose>-1.522 4.483 0.001 0 0 3.796</pose><link name="link"><visual name="v"><geometry><box><size>0.653 0.05 0.001</size></box></geometry><material><ambient>0.05 0.05 0.05 1</ambient><diffuse>0.05 0.05 0.05 1</diffuse></material></visual></link></model>
+    <model name="curve_15"><static>true</static><pose>-1.983 4.022 0.001 0 0 4.058</pose><link name="link"><visual name="v"><geometry><box><size>0.653 0.05 0.001</size></box></geometry><material><ambient>0.05 0.05 0.05 1</ambient><diffuse>0.05 0.05 0.05 1</diffuse></material></visual></link></model>
+    <model name="curve_16"><static>true</static><pose>-2.310 3.457 0.001 0 0 4.320</pose><link name="link"><visual name="v"><geometry><box><size>0.653 0.05 0.001</size></box></geometry><material><ambient>0.05 0.05 0.05 1</ambient><diffuse>0.05 0.05 0.05 1</diffuse></material></visual></link></model>
+    <model name="curve_17"><static>true</static><pose>-2.479 2.826 0.001 0 0 4.581</pose><link name="link"><visual name="v"><geometry><box><size>0.653 0.05 0.001</size></box></geometry><material><ambient>0.05 0.05 0.05 1</ambient><diffuse>0.05 0.05 0.05 1</diffuse></material></visual></link></model>
+    <model name="curve_18"><static>true</static><pose>-2.479 2.174 0.001 0 0 4.843</pose><link name="link"><visual name="v"><geometry><box><size>0.653 0.05 0.001</size></box></geometry><material><ambient>0.05 0.05 0.05 1</ambient><diffuse>0.05 0.05 0.05 1</diffuse></material></visual></link></model>
+    <model name="curve_19"><static>true</static><pose>-2.310 1.543 0.001 0 0 5.105</pose><link name="link"><visual name="v"><geometry><box><size>0.653 0.05 0.001</size></box></geometry><material><ambient>0.05 0.05 0.05 1</ambient><diffuse>0.05 0.05 0.05 1</diffuse></material></visual></link></model>
+    <model name="curve_20"><static>true</static><pose>-1.983 0.978 0.001 0 0 5.367</pose><link name="link"><visual name="v"><geometry><box><size>0.653 0.05 0.001</size></box></geometry><material><ambient>0.05 0.05 0.05 1</ambient><diffuse>0.05 0.05 0.05 1</diffuse></material></visual></link></model>
+    <model name="curve_21"><static>true</static><pose>-1.522 0.517 0.001 0 0 5.629</pose><link name="link"><visual name="v"><geometry><box><size>0.653 0.05 0.001</size></box></geometry><material><ambient>0.05 0.05 0.05 1</ambient><diffuse>0.05 0.05 0.05 1</diffuse></material></visual></link></model>
+    <model name="curve_22"><static>true</static><pose>-0.957 0.190 0.001 0 0 5.890</pose><link name="link"><visual name="v"><geometry><box><size>0.653 0.05 0.001</size></box></geometry><material><ambient>0.05 0.05 0.05 1</ambient><diffuse>0.05 0.05 0.05 1</diffuse></material></visual></link></model>
+    <model name="curve_23"><static>true</static><pose>-0.326 0.021 0.001 0 0 6.152</pose><link name="link"><visual name="v"><geometry><box><size>0.653 0.05 0.001</size></box></geometry><material><ambient>0.05 0.05 0.05 1</ambient><diffuse>0.05 0.05 0.05 1</diffuse></material></visual></link></model>
+
+  </world>
+</sdf>
