@@ -1403,6 +1403,58 @@ ffmpeg -i /workspaces/ros2-line-follower/overlay_video.mp4 \
 
 ---
 
+## Make Commands
+
+All common workflows are wrapped as `make` targets. Run `make help` to see the list at any time.
+
+### Launcher
+
+| Command | Description |
+|---------|-------------|
+| `make gui` | Launch the graphical launcher (recommended) |
+
+### One-time Setup
+
+| Command | Description |
+|---------|-------------|
+| `make build` | Build the Docker image |
+| `make colcon-build` | Build the ROS2 package inside the container |
+
+### Dataset & Training *(no simulation needed)*
+
+| Command | Description |
+|---------|-------------|
+| `make dataset` | Generate training dataset (~3000 images) |
+| `make train` | Train the CNN model |
+| `make evaluate` | Evaluate model accuracy (optional) |
+| `make inspect` | Save dataset preview image (optional) |
+
+### Simulation *(run in Terminal A — blocks until Ctrl+C)*
+
+| Command | Description |
+|---------|-------------|
+| `make sim` | Headless, default world (`line_track`) |
+| `make sim-gui` | With Gazebo window, default world |
+| `make sim-rect` | Headless, rectangle world |
+| `make sim-maze` | Headless, corridor_maze world |
+
+### Nodes *(run in separate terminals while simulation is running)*
+
+| Command | Description |
+|---------|-------------|
+| `make inference` | Run the AI inference node |
+| `make record-traj` | Record trajectory → `trajectory.png` |
+| `make record-video` | Record annotated video → `overlay_video.mp4` |
+| `make foxglove` | Foxglove bridge at `ws://localhost:8765` |
+
+### Stop
+
+| Command | Description |
+|---------|-------------|
+| `make stop` | Stop all containers (`docker compose down`) |
+
+---
+
 ## Quick Command Reference
 
 ```bash
