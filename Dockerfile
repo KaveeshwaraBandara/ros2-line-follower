@@ -19,16 +19,17 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /workspaces/ros2-line-follower
 
 # Install Python dependencies
-# requirements.txt now points to the CUDA 12.1 wheel index for torch/torchvision
-COPY requirements.txt .
-RUN pip3 install --no-cache-dir -r requirements.txt \
+# requirements-gpu.txt pins the CUDA 12.1 wheel index for torch (local GPU
+# training only — CI and the devcontainer use plain requirements.txt instead)
+COPY requirements.txt requirements-gpu.txt ./
+RUN pip3 install --no-cache-dir -r requirements-gpu.txt \
     || (echo "Pinned CUDA torch version not found — falling back to latest" && \
         pip3 install --no-cache-dir \
             numpy==1.26.4 \
             opencv-python-headless==4.10.0.84 \
             matplotlib==3.10.9 \
             pytest==9.1.0 && \
-        pip3 install --no-cache-dir torch torchvision \
+        pip3 install --no-cache-dir torch \
             --index-url https://download.pytorch.org/whl/cu121)
 
 # Copy source into the image

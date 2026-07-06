@@ -1,16 +1,17 @@
 # Pinned Python dependencies for the line-follower project.
 # These exact versions are the known-good combination — several were
 # chosen specifically to avoid conflicts (see notes below).
+#
+# This is the CPU-only base file — used by CI and the Codespaces
+# devcontainer. For local GPU training (CUDA), use requirements-gpu.txt
+# instead of this file (see GUIDE.md).
 
 # numpy MUST stay <2: cv_bridge is compiled against numpy 1.x and
 # crashes with "_ARRAY_API not found" under numpy 2.x.
 numpy==1.26.4
 
-# Deep learning. torchvision version must be compatible with torch.
---extra-index-url https://download.pytorch.org/whl/cu121
-
-torch==2.12.0+cu121
-torchvision==0.27.0+cu121
+# Deep learning (CPU build).
+torch==2.12.0
 
 # Vision. The -headless build avoids GUI dependencies (no display in Codespace).
 opencv-python-headless==4.10.0.84
