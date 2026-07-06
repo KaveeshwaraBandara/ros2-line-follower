@@ -281,27 +281,28 @@ _WS = os.environ.get('ROS2_LF_WORKSPACE', '/workspaces/ros2-line-follower')
 
 **Problem:** `requirements.txt` installed PyTorch from the default PyPI index, which gives the CPU-only build on Linux. The RTX 4080 was never used during training.
 
-**File:** `requirements.txt`
+**Update (split into two files):** CI and the Codespaces devcontainer have no GPU, so pinning a `+cu121` build in the single shared `requirements.txt` broke `pip install` there whenever the pinned version had no published CUDA wheel (e.g. `torch==2.12.0+cu121` does not exist on the wheel server — only up to `2.5.1+cu121` does). GPU-specific pins now live in their own file so CI/devcontainer installs stay CPU-only and unaffected by CUDA wheel availability.
 
-**Before:**
+**File:** `requirements.txt` (base, CPU-only — used by CI and the devcontainer)
 ```
 torch==2.12.0
-torchvision==0.27.0
 ```
+(`torchvision` was removed — it was pinned but never imported anywhere in the codebase; `dataset.py` implements its own `Dataset` instead of using `torchvision.datasets`.)
 
-**After:**
+**New file:** `requirements-gpu.txt` (standalone — install *instead of* `requirements.txt` for local GPU training)
 ```
 --extra-index-url https://download.pytorch.org/whl/cu121
 
-torch==2.12.0+cu121
-torchvision==0.27.0+cu121
+torch==2.5.1+cu121
 ```
 
 **Why `--extra-index-url` instead of `--index-url`:** Using `--extra-index-url` keeps PyPI as the primary index for all other packages (numpy, opencv, etc.) and only adds the CUDA wheel server as a secondary source. `--index-url` would replace PyPI entirely and break all other package installs.
 
-The `+cu121` suffix explicitly selects the CUDA 12.1 build, which supports the RTX 4080 (Ada Lovelace, compute capability 8.9, requires CUDA ≥ 11.8).
+The `+cu121` suffix explicitly selects the CUDA 12.1 build, which supports the RTX 4080 (Ada Lovelace, compute capability 8.9, requires CUDA ≥ 11.8). `2.5.1` is pinned (not `2.12.0`) because it's the newest release with a published `+cu121` wheel — bump it once a newer one is published upstream.
 
-**If `torch==2.12.0+cu121` does not exist** on the wheel server when you build, the Dockerfile falls back to the latest available CUDA build automatically. You will see a pip error followed by a successful second install — this is expected.
+**Do not pass both files to the same `pip install` call** — both pin `torch`, and pip errors on the double requirement. The Dockerfile installs `requirements-gpu.txt` only; CI and the devcontainer install `requirements.txt` only.
+
+**If the pinned CUDA torch version does not exist** on the wheel server when you build, the Dockerfile falls back to the latest available CUDA build automatically. You will see a pip error followed by a successful second install — this is expected.
 
 ---
 
@@ -528,16 +529,17 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /workspaces/ros2-line-follower
 
 # Install Python dependencies
-# requirements.txt now points to the CUDA 12.1 wheel index for torch/torchvision
-COPY requirements.txt .
-RUN pip3 install --no-cache-dir -r requirements.txt \
+# requirements-gpu.txt pins the CUDA 12.1 wheel index for torch (local GPU
+# training only — CI and the devcontainer use plain requirements.txt instead)
+COPY requirements.txt requirements-gpu.txt ./
+RUN pip3 install --no-cache-dir -r requirements-gpu.txt \
     || (echo "Pinned CUDA torch version not found — falling back to latest" && \
         pip3 install --no-cache-dir \
             numpy==1.26.4 \
             opencv-python-headless==4.10.0.84 \
             matplotlib==3.10.9 \
             pytest==9.1.0 && \
-        pip3 install --no-cache-dir torch torchvision \
+        pip3 install --no-cache-dir torch \
             --index-url https://download.pytorch.org/whl/cu121)
 
 # Copy source into the image
@@ -866,7 +868,7 @@ Expected:
 ```
 CUDA available: True
 Device: NVIDIA GeForce RTX 4080
-PyTorch version: 2.12.0+cu121
+PyTorch version: 2.5.1+cu121
 ```
 
 If `CUDA available: False`, stop and see Troubleshooting.
@@ -1208,7 +1210,7 @@ python3 -c "import torch; print(torch.__version__)"
 ```
 If the version ends in `+cpu`, the CUDA build was not installed. Reinstall:
 ```bash
-pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu121 --force-reinstall
+pip3 install -r requirements-gpu.txt --force-reinstall
 ```
 
 **Check 2 — Is the GPU visible inside Docker?**
@@ -1375,7 +1377,7 @@ ffmpeg -i /workspaces/ros2-line-follower/overlay_video.mp4 \
 | `src/line_follower/launch/simulation.launch.py` | Removed unused import; refactored with `OpaqueFunction`; added `world_name` and `gui` launch arguments |
 | `src/line_follower/package.xml` | Added `geometry_msgs`, `nav_msgs` dependencies |
 | `src/line_follower/setup.py` | Added `rectangle.world` and `corridor_maze.world` to `data_files` |
-| `requirements.txt` | Added `--extra-index-url`, `+cu121` suffixes on torch/torchvision |
+| `requirements.txt` | Removed unused `torchvision` pin; GPU-specific `+cu121` pin moved out to `requirements-gpu.txt` |
 | `docker-compose.yml` | Added `DISPLAY=${DISPLAY}` env var and `/tmp/.X11-unix` volume for Gazebo GUI |
 | `.gitignore` | Added `test-folder/` |
 
@@ -1383,8 +1385,9 @@ ffmpeg -i /workspaces/ros2-line-follower/overlay_video.mp4 \
 
 | File | Purpose |
 |------|---------|
-| `Dockerfile` | Builds Ubuntu 22.04 + ROS2 Humble + CUDA PyTorch image |
+| `Dockerfile` | Builds Ubuntu 22.04 + ROS2 Humble + CUDA PyTorch image (installs `requirements-gpu.txt`) |
 | `docker-compose.yml` | Mounts workspace, passes GPU, X11 socket, and `ROS2_LF_WORKSPACE` |
+| `requirements-gpu.txt` | CUDA 12.1 `torch` pin for local GPU training — standalone, not combined with `requirements.txt` |
 | `src/line_follower/worlds/rectangle.world` | Closed 6 × 4 m rectangular loop |
 | `src/line_follower/worlds/corridor_maze.world` | 3-row snake path in 20 × 10 m arena with walls and obstacles |
 
