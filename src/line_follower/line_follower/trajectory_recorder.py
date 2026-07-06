@@ -1,4 +1,5 @@
 import os
+import signal
 import rclpy
 from rclpy.node import Node
 from nav_msgs.msg import Odometry
@@ -60,7 +61,16 @@ class TrajectoryRecorder(Node):
         self.get_logger().info(f'Trajectory saved to {output_path}')
 
 
+def _raise_keyboard_interrupt(signum, frame):
+    raise KeyboardInterrupt
+
+
 def main(args=None):
+    # The GUI stops this node with SIGTERM (proc.terminate()); a manual run uses
+    # Ctrl+C (SIGINT). Treat SIGTERM like Ctrl+C so the plot is always saved on
+    # shutdown instead of leaving a stale trajectory.png in place.
+    signal.signal(signal.SIGTERM, _raise_keyboard_interrupt)
+
     rclpy.init(args=args)
     node = TrajectoryRecorder()
     try:
