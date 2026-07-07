@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <world name="corridor_maze">
+
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <!--
+      3-row snake path. Robot spawns at (0,0) facing +X on Row 1.
+
+      Path (top view):
+
+        (-9,4) ══════════════ Row 3 ══════════════ (9,4)
+        ║ left turn at x=-9
+        (-9,2) ══════════════ Row 2 ══════════════ (9,2)
+                                      right turn at x=9 ║
+        (-9,0) ══════════════ Row 1 ══════════════ (9,0)
+                     * robot spawns here
+
+      Turn segments are 2.1 m long so their ends overlap the row
+      endpoints by 0.05 m, closing the gap at each corner.
+    -->
+
+    <!-- Row 1: east along y=0 from x=-9 to x=9 -->
+    <model name="line_row1">
+      <static>true</static>
+      <pose>0 0 0.001 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>18.0 0.05 0.001</size></box></geometry>
+          <material>
+            <ambient>0.05 0.05 0.05 1</ambient>
+            <diffuse>0.05 0.05 0.05 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Right turn: x=9, from y=0 to y=2 -->
+    <model name="line_turn_right">
+      <static>true</static>
+      <pose>9 1.0 0.001 0 0 1.5708</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>2.1 0.05 0.001</size></box></geometry>
+          <material>
+            <ambient>0.05 0.05 0.05 1</ambient>
+            <diffuse>0.05 0.05 0.05 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Row 2: west along y=2 from x=9 to x=-9 -->
+    <model name="line_row2">
+      <static>true</static>
+      <pose>0 2 0.001 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>18.0 0.05 0.001</size></box></geometry>
+          <material>
+            <ambient>0.05 0.05 0.05 1</ambient>
+            <diffuse>0.05 0.05 0.05 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Left turn: x=-9, from y=2 to y=4 -->
+    <model name="line_turn_left">
+      <static>true</static>
+      <pose>-9 3.0 0.001 0 0 1.5708</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>2.1 0.05 0.001</size></box></geometry>
+          <material>
+            <ambient>0.05 0.05 0.05 1</ambient>
+            <diffuse>0.05 0.05 0.05 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Row 3: east along y=4 from x=-9 to x=9 -->
+    <model name="line_row3">
+      <static>true</static>
+      <pose>0 4 0.001 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>18.0 0.05 0.001</size></box></geometry>
+          <material>
+            <ambient>0.05 0.05 0.05 1</ambient>
+            <diffuse>0.05 0.05 0.05 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>

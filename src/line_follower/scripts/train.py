@@ -1,12 +1,18 @@
 import os
+import sys
+
+_SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
+_PROJECT_ROOT = os.path.abspath(os.path.join(_SCRIPTS_DIR, '..', '..', '..'))
+sys.path.insert(0, _SCRIPTS_DIR)
+
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, random_split
 from torchvision import datasets, transforms
 from model import LineFollowerCNN
 
-DATASET_DIR = '/workspaces/ros2-line-follower/dataset'
-MODEL_OUTPUT = '/workspaces/ros2-line-follower/line_follower_model.pth'
+DATASET_DIR = os.path.join(_PROJECT_ROOT, 'dataset')
+MODEL_OUTPUT = os.path.join(_PROJECT_ROOT, 'line_follower_model.pth')
 BATCH_SIZE = 32
 EPOCHS = 12
 LEARNING_RATE = 0.001
@@ -25,6 +31,7 @@ def main():
 
     val_size = int(len(full_dataset) * VALIDATION_SPLIT)
     train_size = len(full_dataset) - val_size
+    torch.manual_seed(42)
     train_dataset, val_dataset = random_split(
         full_dataset, [train_size, val_size]
     )

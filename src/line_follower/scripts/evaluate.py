@@ -1,10 +1,17 @@
+import os
+import sys
+
+_SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
+_PROJECT_ROOT = os.path.abspath(os.path.join(_SCRIPTS_DIR, '..', '..', '..'))
+sys.path.insert(0, _SCRIPTS_DIR)
+
 import torch
 from torch.utils.data import DataLoader, random_split
 from torchvision import datasets, transforms
 from model import LineFollowerCNN
 
-DATASET_DIR = '/workspaces/ros2-line-follower/dataset'
-MODEL_PATH = '/workspaces/ros2-line-follower/line_follower_model.pth'
+DATASET_DIR = os.path.join(_PROJECT_ROOT, 'dataset')
+MODEL_PATH = os.path.join(_PROJECT_ROOT, 'line_follower_model.pth')
 BATCH_SIZE = 32
 IMAGE_SIZE = (48, 64)
 VALIDATION_SPLIT = 0.2
@@ -27,7 +34,7 @@ def main():
     val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False)
 
     model = LineFollowerCNN(num_classes=3)
-    model.load_state_dict(torch.load(MODEL_PATH))
+    model.load_state_dict(torch.load(MODEL_PATH, map_location='cpu', weights_only=True))
     model.eval()
 
 

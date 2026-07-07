@@ -1,9 +1,12 @@
+import os
 import rclpy
 from rclpy.node import Node
 from nav_msgs.msg import Odometry
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+
+_WS = os.environ.get('ROS2_LF_WORKSPACE', '/workspaces/ros2-line-follower')
 
 
 class TrajectoryRecorder(Node):
@@ -52,7 +55,7 @@ class TrajectoryRecorder(Node):
         plt.grid(True, alpha=0.3)
         plt.axis('equal')
 
-        output_path = '/workspaces/ros2-line-follower/trajectory.png'
+        output_path = os.path.join(_WS, 'trajectory.png')
         plt.savefig(output_path, dpi=150, bbox_inches='tight')
         self.get_logger().info(f'Trajectory saved to {output_path}')
 
@@ -67,7 +70,8 @@ def main(args=None):
     finally:
         node.save_plot()
         node.destroy_node()
-        rclpy.shutdown()
+        if rclpy.ok():
+            rclpy.shutdown()
 
 
 if __name__ == '__main__':

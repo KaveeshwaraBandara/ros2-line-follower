@@ -2,7 +2,10 @@ import os
 import cv2
 import numpy as np
 
-DATASET = '/workspaces/ros2-line-follower/dataset'
+_SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
+_PROJECT_ROOT = os.path.abspath(os.path.join(_SCRIPTS_DIR, '..', '..', '..'))
+
+DATASET = os.path.join(_PROJECT_ROOT, 'dataset')
 classes = ['left', 'center', 'right']
 
 rows = []
@@ -18,5 +21,5 @@ for class_name in classes:
     rows.append(row)
 
 montage = np.vstack(rows)
-cv2.imwrite('/workspaces/ros2-line-follower/dataset_preview.png', montage)
+cv2.imwrite(os.path.join(_PROJECT_ROOT, 'dataset_preview.png'), montage)
 print('Saved preview: 3 rows (left, center, right), 5 samples each')

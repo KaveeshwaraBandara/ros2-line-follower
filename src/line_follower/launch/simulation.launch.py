@@ -2,8 +2,14 @@ import os
 import subprocess
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import ExecuteProcess, IncludeLaunchDescription, SetEnvironmentVariable
+from launch.actions import (
+    DeclareLaunchArgument,
+    IncludeLaunchDescription,
+    OpaqueFunction,
+    SetEnvironmentVariable,
+)
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 import xacro
 
@@ -24,14 +30,14 @@ def _ensure_xvfb():
         pass  # Xvfb not installed; caller will get a rendering error from gzserver
 
 
-def generate_launch_description():
-
-    _ensure_xvfb()
-
+def launch_setup(context, *args, **kwargs):
     pkg_share = get_package_share_directory('line_follower')
 
-    urdf_file = os.path.join(pkg_share, 'urdf', 'robot.urdf.xacro')
+    world_name = LaunchConfiguration('world_name').perform(context)
+    world_file = os.path.join(pkg_share, 'worlds', f'{world_name}.world')
+    gui = LaunchConfiguration('gui').perform(context)
 
+    urdf_file = os.path.join(pkg_share, 'urdf', 'robot.urdf.xacro')
     robot_description = xacro.process_file(urdf_file).toxml()
     urdf_output_path = '/tmp/line_follower_robot.urdf'
     with open(urdf_output_path, 'w') as f:
@@ -58,9 +64,9 @@ def generate_launch_description():
             )
         ]),
         launch_arguments={
-            'world': os.path.join(pkg_share, 'worlds', 'line_track.world'),
+            'world': world_file,
             'verbose': 'false',
-            'gui': 'false'
+            'gui': gui
         }.items()
     )
 
@@ -83,11 +89,24 @@ def generate_launch_description():
         }]
     )
 
+    return [set_display, set_softgl, robot_state_publisher_node, gazebo, spawn_robot, camera_node]
+
+
+def generate_launch_description():
+    _ensure_xvfb()
+
     return LaunchDescription([
-        set_display,
-        set_softgl,
-        robot_state_publisher_node,
-        gazebo,
-        spawn_robot,
-        camera_node,
+        DeclareLaunchArgument(
+            'world_name',
+            default_value='line_track',
+            description='World file name (no .world extension) from the worlds/ directory. '
+                        'Options: line_track, rectangle, triangle, corridor_maze, curved, zigzag, messy'
+        ),
+        DeclareLaunchArgument(
+            'gui',
+            default_value='false',
+            description='Open Gazebo GUI window on the host desktop. '
+                        'Requires: run "xhost +local:" on the host first.'
+        ),
+        OpaqueFunction(function=launch_setup),
     ])

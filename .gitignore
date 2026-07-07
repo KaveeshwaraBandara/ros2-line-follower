@@ -7,3 +7,5 @@ __pycache__/
 dataset/
 *.pth
 *.mp4
+test-folder/
+

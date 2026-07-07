@@ -1,3 +1,4 @@
+import os
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Image
@@ -8,6 +9,8 @@ import numpy as np
 import cv2
 
 from line_follower.model import LineFollowerCNN
+
+_WS = os.environ.get('ROS2_LF_WORKSPACE', '/workspaces/ros2-line-follower')
 
 
 
@@ -20,8 +23,9 @@ class InferenceNode(Node):
 
         self.model = LineFollowerCNN(num_classes=3)
         self.model.load_state_dict(torch.load(
-            '/workspaces/ros2-line-follower/line_follower_model.pth',
-            map_location='cpu'
+            os.path.join(_WS, 'line_follower_model.pth'),
+            map_location='cpu',
+            weights_only=True,
         ))
         self.model.eval()
 
